@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { initializeApp } from '@firebase/app';
-import { getAuth, signInWithEmailAndPassword } from '@firebase/auth';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from '@firebase/auth';
+import { useNavigation } from '@react-navigation/native';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -19,28 +20,41 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-export default function LoginScreen({ navigation }) {
+export default function ECanteenScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
+  const navigation = useNavigation();
 
-  const handleLogin = async () => {
+  const handleSubmit = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigation.navigate('Home'); // Navigate to Home on successful login
+      if (isSignUp) {
+        await createUserWithEmailAndPassword(auth, email, password);
+        Alert.alert('Success', 'Account created successfully!');
+        navigation.navigate('Home');
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+        navigation.navigate('Home');
+      }
     } catch (error) {
-      console.error('Login error:', error);
-      Alert.alert('Authentication Error', 'Incorrect email or password. Please try again.');
+      console.error('Authentication error:', error);
+      Alert.alert('Authentication Error', 'Incorrect email and password. Please try again .');
     }
+  };
+
+  const toggleSignUp = () => {
+    setIsSignUp((prevState) => !prevState);
   };
 
   return (
     <LinearGradient colors={['#FF7E5F', '#FEB47B']} style={styles.container}>
       <View style={styles.innerContainer}>
-        <Text style={styles.title}>Welcome Back!</Text>
-        <Text style={styles.subtitle}>Please log in to continue</Text>
+        <Image source={require('../assets/logo_jpg (2).png')} style={styles.logo} />
+        <Text style={styles.title}>{isSignUp ? 'Sign Up' : 'E-Canteen'}</Text>
+        <Text style={styles.subtitle}>{isSignUp ? 'Create your account' : 'Please log in to continue'}</Text>
 
-        <TextInput 
-          style={styles.input} 
+        <TextInput
+          style={styles.input}
           placeholder="Email"
           placeholderTextColor="#FFF"
           value={email}
@@ -48,17 +62,23 @@ export default function LoginScreen({ navigation }) {
           autoCapitalize="none"
         />
 
-        <TextInput 
-          style={styles.input} 
+        <TextInput
+          style={styles.input}
           placeholder="Password"
           placeholderTextColor="#FFF"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
         />
-        
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Login</Text>
+
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>{isSignUp ? 'Sign Up' : 'Sign In'}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.switchButton} onPress={toggleSignUp}>
+          <Text style={styles.switchButtonText}>
+            {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
+          </Text>
         </TouchableOpacity>
       </View>
     </LinearGradient>
@@ -73,19 +93,26 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)', 
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 12,
     marginHorizontal: 10,
   },
+  logo: {
+    width: 120,
+    height: 120,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
   title: {
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#FFF',  
+    color: '#FFF',
     textAlign: 'center',
     marginBottom: 10,
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#FFF',
     textAlign: 'center',
     marginBottom: 30,
@@ -96,12 +123,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.4)',  
-    color: '#FFF',  
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    color: '#FFF',
     marginBottom: 20,
   },
-  loginButton: {
-    backgroundColor: '#FF6F61',  
+  button: {
+    backgroundColor: '#FF6F61',
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',
@@ -110,9 +137,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 3,
   },
-  loginButtonText: {
+  buttonText: {
     color: '#FFF',
     fontSize: 18,
     fontWeight: '600',
+  },
+  switchButton: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  switchButtonText: {
+    color: '#FFF',
+    fontSize: 16,
   },
 });
