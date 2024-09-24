@@ -6,8 +6,15 @@ The **e-Canteen Customer App** is a React Native prototype designed to provide a
 ## Current Status
 The app is currently in the **prototype phase**, under development.
 
+## Current Features
+- **User Authentication**: Secure login and registration using Firebase Authentication.
+- **Menu Browsing**: Users can view a comprehensive menu with detailed descriptions and prices.
+- **Order Confirmation**: Users receive confirmation after successfully placing an order.
+- **Profile Panel**: Users can manage their profile and view order history.
+- **User-Friendly Interface**: Modern and attractive UI design for an enhanced user experience.
+
+
 ## Future Features
-- User registration and login system
 - Menu browsing and ordering system
 - Rating and review system for food items
 - Firebase authentication integration
