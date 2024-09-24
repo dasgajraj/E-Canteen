@@ -55,10 +55,7 @@ The app will be deployed to the App Store and Google Play Store once development
 ## Contributing
 Contributions are welcome! If you'd like to contribute to the e-Canteen Customer App, please fork the repository and submit a pull request.
 
-## License
-The e-Canteen Customer App is licensed under the **MIT License**.
-
 ## Developed By
+- **Das Gajraj Sharma**
 - **Nishant Garg**
 - **Abbas Ali**
-- **Das Gajraj Sharma**
