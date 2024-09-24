@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Animated, LayoutAnimation, Platform, UIManager, ScrollView } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { Navigation } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native'; // Import navigation
 
 if (Platform.OS === 'android') {
   UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -12,6 +12,7 @@ const ProfileScreen = () => {
   const [showMoreAbout, setShowMoreAbout] = useState(false);
   const animatedHeightHelp = useRef(new Animated.Value(0)).current;
   const animatedHeightAbout = useRef(new Animated.Value(0)).current;
+  const navigation = useNavigation(); // Initialize navigation
 
   const toggleSection = (section) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -30,6 +31,11 @@ const ProfileScreen = () => {
         useNativeDriver: false,
       }).start();
     }
+  };
+
+  const handleLogout = () => {
+    // Navigate to LoginScreen when Log out is clicked
+    navigation.replace('LoginScreen');
   };
 
   return (
@@ -59,19 +65,19 @@ const ProfileScreen = () => {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.menuItem}>
-        <View style={styles.menuIcon}>
-          <MaterialIcons name="logout" size={24} color="#0017FF" />
-        </View>
-        <View style={styles.menuTextContainer}>
-          <Text style={styles.menuText}>Log out</Text>
-          <Text style={styles.menuSubText}>Further secure your account for safety</Text>
-        </View>
-      </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.replace('Login')}>
+      <View style={styles.menuIcon}>
+        <MaterialIcons name="logout" size={24} color="#0017FF" />
+      </View>
+      <View style={styles.menuTextContainer}>
+        <Text style={styles.menuText}>Log out</Text>
+        <Text style={styles.menuSubText}>Further secure your account for safety</Text>
+      </View>
+    </TouchableOpacity>
+
 
       <Text style={styles.sectionHeader}>More</Text>
 
-      {/* Help & Support Section */}
       <TouchableOpacity style={styles.menuItem} onPress={() => toggleSection('help')}>
         <View style={styles.menuIcon}>
           <Ionicons name="help-circle-outline" size={24} color="#0017FF" />
@@ -104,7 +110,7 @@ const ProfileScreen = () => {
         <Animated.View style={[styles.moreContent, {
           height: animatedHeightAbout.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, 300] 
+            outputRange: [0, 300]
           }),
         }]}>
           <Text style={styles.moreText}>
@@ -192,7 +198,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   moreContent: {
- overflow: 'hidden',
+    overflow: 'hidden',
     paddingHorizontal: 20,
     paddingVertical: 15,
   },
