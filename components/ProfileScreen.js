@@ -46,7 +46,7 @@ const ProfileScreen = () => {
         <View style={styles.profileInfo}>
           <Image
             style={styles.avatar}
-            source={{ uri: 'https://via.placeholder.com/100' }} // Placeholder avatar, replace with real image
+            source={{ uri: 'https://cdn-icons-png.flaticon.com/512/149/149071.png' }} // Placeholder avatar, replace with real image
           />
           <View>
             <Text style={styles.username}>USERNAME</Text>
@@ -115,7 +115,7 @@ const ProfileScreen = () => {
         }]}>
           <Text style={styles.moreText}>
             Welcome to eCanteen, your go-to solution for convenient and delicious food delivery in hospitals, colleges, and offices. Our mission is to make quality meals accessible to everyone, no matter where you are. With just a few taps, you can order a variety of healthy and satisfying meals tailored to your taste. 
-            Created by a dedicated team of innovators—Nishant Garg, Abbas Ali, Das Gajraj Sharma, and Jivika Chawla—our app reflects our passion for good food and community service.
+            Created by a dedicated team of innovators— Das Gajraj Sharma, Nishant Garg, Abbas Ali —our app reflects our passion for good food and community service.
           </Text>
         </Animated.View>
       )}
