@@ -27,7 +27,7 @@ The app is currently in the **prototype phase**, under development.
 ## Installation and Setup
 1. Clone the repository:
     ```bash
-    git clone https://github.com/AbbasAliNaqvi/E-Canteen.git
+    git clone https://github.com/dasgajraj/E-Canteen.git
     ```
 2. Install dependencies:
     ```bash
