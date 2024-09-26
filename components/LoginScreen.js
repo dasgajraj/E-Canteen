@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { initializeApp } from '@firebase/app';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from '@firebase/auth';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithCredential } from '@firebase/auth';
 import { useNavigation } from '@react-navigation/native';
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -20,25 +22,75 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+WebBrowser.maybeCompleteAuthSession();
+
 export default function ECanteenScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    expoClientId: 'YOUR_EXPO_CLIENT_ID',
+    iosClientId: 'YOUR_IOS_CLIENT_ID',
+    androidClientId: 'YOUR_ANDROID_CLIENT_ID',
+    webClientId: 'YOUR_WEB_CLIENT_ID',
+  });
+
   const navigation = useNavigation();
 
   const handleSubmit = async () => {
     try {
       if (isSignUp) {
+        // Attempt to create a new account
         await createUserWithEmailAndPassword(auth, email, password);
         Alert.alert('Success', 'Account created successfully!');
         navigation.navigate('Home');
       } else {
+        // Attempt to sign in with existing account
         await signInWithEmailAndPassword(auth, email, password);
         navigation.navigate('Home');
       }
     } catch (error) {
       console.error('Authentication error:', error);
-      Alert.alert('Authentication Error', 'Incorrect email and password. Please try again .');
+      
+      // Check if the error is for email already in use
+      if (isSignUp && error.code === 'auth/email-already-in-use') {
+        Alert.alert(
+          'Account Already Exists',
+          'This email is already registered. Please log in instead.',
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                // Switch to Sign In mode and navigate to the login page
+                setIsSignUp(false);
+                // You could optionally navigate to any SignIn screen if needed
+                navigation.navigate('SignIn');
+              }
+            }
+          ]
+        );
+      } else {
+        Alert.alert('Authentication Error', 'Incorrect email or password. Please try again.');
+      }
+    }
+  };
+  
+  
+
+  const handleGoogleSignIn = async () => {
+    const result = await promptAsync();
+    if (result?.type === 'success') {
+      const { id_token } = result.params;
+      const credential = GoogleAuthProvider.credential(id_token);
+      signInWithCredential(auth, credential)
+        .then(() => {
+          Alert.alert('Success', 'Logged in with Google!');
+          navigation.navigate('Home');
+        })
+        .catch((error) => {
+          console.error('Google Sign-In Error:', error);
+          Alert.alert('Google Sign-In Error', 'An error occurred. Please try again.');
+        });
     }
   };
 
@@ -73,6 +125,10 @@ export default function ECanteenScreen() {
 
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>{isSignUp ? 'Sign Up' : 'Sign In'}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.googleButton} onPress={handleGoogleSignIn} disabled={!request}>
+          <Text style={styles.buttonText}>Sign In with Google</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.switchButton} onPress={toggleSignUp}>
@@ -136,6 +192,17 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
+  },
+  googleButton: {
+    backgroundColor: '#4285F4',
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    marginTop: 15,
   },
   buttonText: {
     color: '#FFF',
