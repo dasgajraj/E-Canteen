@@ -8,11 +8,15 @@ The app is currently in the **prototype phase**, under development.
 
 ## Current Features
 - **User Authentication**: Secure login and registration using Firebase Authentication.
+- **Google Sign-In**: Front-end for Google Sign-In is implemented, but API integration is not available yet.
 - **Menu Browsing**: Users can view a comprehensive menu with detailed descriptions and prices.
 - **Order Confirmation**: Users receive confirmation after successfully placing an order.
 - **Profile Panel**: Users can manage their profile and view order history.
 - **User-Friendly Interface**: Modern and attractive UI design for an enhanced user experience.
 
+## Recent Changes
+- Added an alert for "Account Already Exists" error, and navigated users to the Sign In screen after they attempt to create an account with an existing email.
+- Added front-end implementation for Google Sign-In, API not available yet.
 
 ## Future Features
 - Menu browsing and ordering system
@@ -22,6 +26,7 @@ The app is currently in the **prototype phase**, under development.
 
 ## Technical Details
 - Built using **React Native**
+- Firebase Authentication for user login and sign-up
 - Currently in prototype phase, under development
 
 ## Installation and Setup
