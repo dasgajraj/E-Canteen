@@ -6,16 +6,17 @@ import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, Go
 import { useNavigation } from '@react-navigation/native';
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
+import { FIREBASE_API_KEY, FIREBASE_AUTH_DOMAIN, FIREBASE_PROJECT_ID, FIREBASE_STORAGE_BUCKET, FIREBASE_MESSAGING_SENDER_ID, FIREBASE_APP_ID, FIREBASE_MEASUREMENT_ID } from '@env';
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDxWTmBsslJZ80e7mEbDBtCi7FNlrMSuJE",
-  authDomain: "ecanteen-4ab1b.firebaseapp.com",
-  projectId: "ecanteen-4ab1b",
-  storageBucket: "ecanteen-4ab1b.appspot.com",
-  messagingSenderId: "65494167458",
-  appId: "1:65494167458:web:d3cdfbbafce02a6c5b8cfb",
-  measurementId: "G-P52Q86NJ83"
+  apiKey: FIREBASE_API_KEY,
+  authDomain: FIREBASE_AUTH_DOMAIN,
+  projectId: FIREBASE_PROJECT_ID,
+  storageBucket: FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+  appId: FIREBASE_APP_ID,
+  measurementId: FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
